@@ -1,14 +1,25 @@
-import {Home} from "./pages/Home";
+// import {Home} from "./pages/Home";
 
-function App() {
+// function App() {
+//   return (
+//     <>
+//       <main>
+//         <Home />
+//       </main>
+//     </>
+//   );
+// }
+
+// export default App;
+
+import Home from "./pages/Home";
+
+export default function App() {
   return (
-    <>
-      <main>
-        <Home />
-      </main>
-    </>
+    <div className="min-h-screen bg-black text-white">
+      <Home />
+    </div>
   );
 }
 
-export default App;
 
