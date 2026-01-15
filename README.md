@@ -1,16 +1,53 @@
-# React + Vite
+# 🎬 StreamTrendr
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+StreamTrendr is a full-stack web application that tracks trending movies and TV shows across streaming platforms. It aggregates trend data from one API and enhances it with detailed metadata from another, presenting everything in a clean, card-based dashboard.
 
-Currently, two official plugins are available:
+This project is currently **in development** and is being built as a portfolio project to demonstrate modern frontend and backend web development practices.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Features (Planned & In Progress)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Trending movies & TV shows dashboard
+- Card-based UI displaying cover art and titles
+- Trend data sourced from Watchmode API
+- Metadata enrichment (posters, descriptions, ratings)
+- Search functionality
+- Filtering by platform, type, or popularity
+- Optimized API usage and caching (planned)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+
+### Frontend
+- **React** (Vite)
+- JavaScript (ES6+)
+- CSS (global styles + component-based styling)
+
+### Backend
+- **Node.js**
+- **Express.js**
+- External APIs:
+  - Watchmode API (trending data)
+  - Metadata API (movie/TV details)
+
+---
+
+📌 Project Status
+
+🚧 In Development
+
+Current Progress:
+
+Created UI prototype in **Figma**
+
+Found APIs for the backend. 
+
+Frontend is set up and ready to be coded. 
+
+Planned Implementation:
+
+
+
+## This project is for educational and portfolio purposes.
