@@ -1,17 +1,4 @@
-// import {Home} from "./pages/Home";
-
-// function App() {
-//   return (
-//     <>
-//       <main>
-//         <Home />
-//       </main>
-//     </>
-//   );
-// }
-
-// export default App;
-
+// src/App.jsx
 import Home from "./pages/Home";
 
 export default function App() {
