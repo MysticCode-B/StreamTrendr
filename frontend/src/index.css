@@ -1,5 +1,9 @@
+@import "tailwindcss";
+
 /* Global base styles only */
-/* Keep this file minimal and boring on purpose */
+
+/* Adding Tailwind base styles in tailwind.css */
+
 
 *,
 *::before,
