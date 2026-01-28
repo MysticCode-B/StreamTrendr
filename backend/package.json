@@ -1,12 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "StreamTrendr API Backend",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
+  "keywords": ["streaming", "api", "movies", "tv-shows"],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
@@ -15,5 +17,8 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
   }
 }
