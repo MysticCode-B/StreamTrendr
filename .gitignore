@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+<<<<<<< HEAD
+=======
+# ignore .env file
+>>>>>>> 88fdb98689777481407cfdf441ec9f92dbac99bd
 backend/.env
 
 # Editor directories and files
