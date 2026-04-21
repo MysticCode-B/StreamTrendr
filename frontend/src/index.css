@@ -100,7 +100,12 @@ button {
 }
 
 .top-navigation__link {
+  color: inherit;
   cursor: pointer;
+}
+
+.top-navigation__link--active {
+  color: rgb(34 211 238);
 }
 
 .top-navigation__link--accent {
@@ -640,6 +645,183 @@ button {
   line-height: 1.3;
 }
 
+.discovery-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  width: 85%;
+  margin: 0 auto;
+  padding: 2.25rem 0 4rem;
+}
+
+.discovery-hero {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(360px, 1.1fr);
+  gap: 2rem;
+  padding: 2rem;
+  border: 1px solid rgba(107, 143, 155, 0.35);
+  border-radius: 1.1rem;
+  background:
+    linear-gradient(135deg, rgba(53, 95, 117, 0.18), rgba(17, 24, 39, 0)),
+    rgba(17, 24, 39, 0.48);
+}
+
+.discovery-hero__copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.discovery-hero__eyebrow {
+  margin: 0 0 0.75rem;
+  color: rgb(34 211 238);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.discovery-hero__title {
+  margin: 0 0 0.9rem;
+  font-size: 2.1rem;
+  line-height: 1.15;
+}
+
+.discovery-hero__description {
+  margin: 0;
+  max-width: 34rem;
+  color: rgb(209 213 219);
+  line-height: 1.7;
+}
+
+.discovery-feature-card {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid rgba(107, 143, 155, 0.28);
+  border-radius: 1rem;
+  background: rgba(31, 41, 55, 0.72);
+}
+
+.discovery-feature-card__poster,
+.discovery-card__poster {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 2 / 3;
+  padding: 0.9rem;
+  border: 1px solid rgba(107, 143, 155, 0.3);
+  border-radius: 0.95rem;
+  background:
+    radial-gradient(circle at top, rgba(107, 143, 155, 0.35), rgba(17, 24, 39, 0) 55%),
+    linear-gradient(160deg, rgba(53, 95, 117, 0.28), rgba(17, 24, 39, 0.95));
+}
+
+.discovery-feature-card__badge,
+.discovery-card__badge {
+  align-self: flex-start;
+  padding: 0.3rem 0.65rem;
+  border-radius: 9999px;
+  background: rgba(17, 24, 39, 0.76);
+  color: rgb(226 232 240);
+  font-size: 0.72rem;
+}
+
+.discovery-feature-card__poster-text,
+.discovery-card__poster-text {
+  align-self: flex-end;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.discovery-feature-card__body,
+.discovery-card__body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.discovery-feature-card__provider,
+.discovery-card__provider {
+  margin: 0 0 0.4rem;
+  color: rgb(191 219 254);
+  font-size: 0.82rem;
+}
+
+.discovery-feature-card__title {
+  margin: 0 0 0.45rem;
+  font-size: 1.5rem;
+}
+
+.discovery-feature-card__meta {
+  margin: 0 0 0.8rem;
+  color: rgb(148 163 184);
+  font-size: 0.88rem;
+}
+
+.discovery-feature-card__summary {
+  margin: 0;
+  color: rgb(209 213 219);
+  line-height: 1.65;
+}
+
+.discovery-shelves {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.discovery-shelf {
+  padding: 1.6rem;
+  border: 1px solid rgba(107, 143, 155, 0.28);
+  border-radius: 1rem;
+  background: rgba(17, 24, 39, 0.38);
+}
+
+.discovery-shelf__heading {
+  max-width: 38rem;
+  margin-bottom: 1.25rem;
+}
+
+.discovery-shelf__title {
+  margin: 0 0 0.45rem;
+  font-size: 1.35rem;
+}
+
+.discovery-shelf__description {
+  margin: 0;
+  color: rgb(209 213 219);
+  line-height: 1.6;
+}
+
+.discovery-shelf__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.discovery-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.85rem;
+  border: 1px solid rgba(107, 143, 155, 0.28);
+  border-radius: 1rem;
+  background:
+    linear-gradient(180deg, rgba(53, 95, 117, 0.18), rgba(17, 24, 39, 0.92)),
+    #1f2937;
+}
+
+.discovery-card__title {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
 @media (max-width: 1100px) {
   .top-navigation {
     gap: 1rem;
@@ -656,13 +838,15 @@ button {
   }
 
   .overview-panel,
-  .workflow-panel {
+  .workflow-panel,
+  .discovery-hero {
     grid-template-columns: 1fr;
   }
 
   .content-lane__grid,
   .overview-panel__stats,
-  .workflow-panel__steps {
+  .workflow-panel__steps,
+  .discovery-shelf__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -699,6 +883,11 @@ button {
     width: calc(100% - 2rem);
   }
 
+  .discovery-page {
+    width: calc(100% - 2rem);
+    padding-top: 1.5rem;
+  }
+
   .hero-title {
     font-size: 1.5rem;
   }
@@ -715,7 +904,16 @@ button {
 
   .content-lane__grid,
   .overview-panel__stats,
-  .workflow-panel__steps {
+  .workflow-panel__steps,
+  .discovery-shelf__grid {
     grid-template-columns: 1fr;
+  }
+
+  .discovery-feature-card {
+    grid-template-columns: 1fr;
+  }
+
+  .discovery-hero__title {
+    font-size: 1.6rem;
   }
 }
