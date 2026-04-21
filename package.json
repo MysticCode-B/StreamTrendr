@@ -1,4 +1,11 @@
 {
+  "name": "streamtrendr-root",
+  "private": true,
+  "scripts": {
+    "dev": "./start.sh",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev:backend": "npm run dev --prefix backend"
+  },
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.3",
     "autoprefixer": "^10.4.24",
