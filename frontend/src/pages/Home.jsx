@@ -5,10 +5,10 @@ import { Hero } from "../components/Hero";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-800">
+    <main className="home-page">
       <Navbar />
       <ProviderBar />
       <Hero />
-    </div>
+    </main>
   );
 }

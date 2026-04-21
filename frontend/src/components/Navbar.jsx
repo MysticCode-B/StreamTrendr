@@ -1,25 +1,40 @@
 export const Navbar = () => {
-    return (
-        <nav className="flex items-center justify-between px-6 py-4 bg-gray-700 text-white">
-            <div className="flex items-center gap-6">
-                <h1 className="text-xl font-bold text-cyan-400">StreamTrendr</h1>
+  const navigationLinks = [
+    "Movies",
+    "TV Shows",
+    "Explore What's New",
+  ];
 
-                <span className="text-sm text-white cursor-pointer">Home</span>
-            </div>
+  const accountLinks = ["Login", "Sign Up"];
 
-            <input
-                type="text"
-                placeholder="Search..."
-                className="w-64 px-4 py-2 rounded-full bg-gray-600 text-white text-sm focus:outline-none placeholder-gray-400"
-            />
+  return (
+    <nav className="top-navigation">
+      <div className="top-navigation__brand-group">
+        <h1 className="top-navigation__brand">StreamTrendr</h1>
+      </div>
 
-            <div className="flex items-center gap-6 text-sm">
-                <span className="cursor-pointer">Movies</span>
-                <span className="cursor-pointer">TV Shows</span>
-                <span className="cursor-pointer">Explore What's New</span>
-                <span className="text-cyan-400 cursor-pointer">Login</span>
-                <span className="text-cyan-400 cursor-pointer">Sign Up</span>
-            </div>
-        </nav>
-    );
+      <input
+        type="text"
+        placeholder="Search..."
+        className="top-navigation__search-input"
+      />
+
+      <div className="top-navigation__links" aria-label="Primary navigation">
+        {navigationLinks.map((linkLabel) => (
+          <span key={linkLabel} className="top-navigation__link">
+            {linkLabel}
+          </span>
+        ))}
+
+        {accountLinks.map((linkLabel) => (
+          <span
+            key={linkLabel}
+            className="top-navigation__link top-navigation__link--accent"
+          >
+            {linkLabel}
+          </span>
+        ))}
+      </div>
+    </nav>
+  );
 };

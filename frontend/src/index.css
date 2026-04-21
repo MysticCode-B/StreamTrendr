@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-/* Global base styles only */
-
-/* Adding Tailwind base styles in tailwind.css */
-
-
 *,
 *::before,
 *::after {
@@ -21,31 +16,130 @@ body {
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-
-  background-color: #000; /* streaming-app dark background */
+  background-color: #000;
   color: #ffffff;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Remove default Vite centering */
 #root {
   min-height: 100vh;
   width: 100%;
 }
 
-/* Links inherit color unless overridden */
 a {
   color: inherit;
   text-decoration: none;
 }
 
-/* Buttons reset (components should style themselves) */
 button {
   font-family: inherit;
   background: none;
   border: none;
   padding: 0;
   color: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background-color: rgb(17 24 39);
+  color: #ffffff;
+}
+
+.home-page {
+  min-height: 100vh;
+  background-color: rgb(31 41 55);
+}
+
+.top-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background-color: rgb(55 65 81);
+  color: #ffffff;
+}
+
+.top-navigation__brand-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.top-navigation__brand {
+  margin: 0;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgb(34 211 238);
+}
+
+.top-navigation__search-input {
+  width: 16rem;
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 9999px;
+  background-color: rgb(75 85 99);
+  color: #ffffff;
+  font-size: 0.875rem;
+}
+
+.top-navigation__search-input:focus {
+  outline: none;
+}
+
+.top-navigation__search-input::placeholder {
+  color: rgb(156 163 175);
+}
+
+.top-navigation__links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.top-navigation__link {
+  cursor: pointer;
+}
+
+.top-navigation__link--accent {
+  color: rgb(34 211 238);
+}
+
+.provider-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  padding: 0.75rem 0;
+  background-color: #355f75;
+}
+
+.provider-bar__item {
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.hero-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.hero-banner {
+  width: 85%;
+  height: 450px;
+  padding: 2.5rem;
+  border: 4px solid #6b8f9b;
+  border-radius: 0.75rem;
+  color: #ffffff;
+}
+
+.hero-title {
+  margin: 0;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.25;
 }
