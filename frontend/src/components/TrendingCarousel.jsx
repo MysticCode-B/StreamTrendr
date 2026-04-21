@@ -66,9 +66,19 @@ export const TrendingCarousel = ({ items }) => {
             className={`trend-card${index === 0 ? " trend-card--featured" : ""}`}
           >
             <div className="trend-card__poster" aria-label={`${item.title} poster placeholder`}>
+              {item.poster ? (
+                <img
+                  src={item.poster}
+                  alt={`${item.title} poster`}
+                  className="trend-card__poster-image"
+                />
+              ) : null}
+
               <div className="trend-card__poster-overlay">
                 <span className="trend-card__poster-badge">{item.type}</span>
-                <p className="trend-card__poster-label">{item.posterLabel}</p>
+                <p className="trend-card__poster-label">
+                  {item.poster ? item.title : item.posterLabel}
+                </p>
               </div>
             </div>
 

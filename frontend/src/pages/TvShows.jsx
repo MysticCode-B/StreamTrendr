@@ -8,7 +8,7 @@ export default function TvShows() {
     <>
       <PageNavbar currentPath="/tv-shows" />
       <ProviderBar />
-      <DiscoveryPage data={tvShowsPageData} />
+      <DiscoveryPage data={tvShowsPageData} section="tv-shows" />
     </>
   );
 }

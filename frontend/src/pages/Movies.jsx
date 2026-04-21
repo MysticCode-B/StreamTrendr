@@ -8,7 +8,7 @@ export default function Movies() {
     <>
       <PageNavbar currentPath="/movies" />
       <ProviderBar />
-      <DiscoveryPage data={moviesPageData} />
+      <DiscoveryPage data={moviesPageData} section="movies" />
     </>
   );
 }

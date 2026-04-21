@@ -1,12 +1,82 @@
-import { WatchmodeClient } from '@watchmode/api-client';
+const { WatchmodeClient } = require("@watchmode/api-client");
 
-const client = new WatchmodeClient({ apiKey: 'YOUR_API_KEY' });
+const DEFAULT_REGION = "US";
 
-// Search for titles
-const { data: results } = await client.search.byName({ searchValue: 'Breaking Bad' });
+let client;
 
-// Get title details
-const { data: title } = await client.title.getDetails({ id: '3173903' });
+function getWatchmodeClient() {
+  if (!process.env.WATCHMODE_API_KEY) {
+    throw new Error("WATCHMODE_API_KEY is not configured.");
+  }
 
-// Get streaming sources
-const { data: sources } = await client.title.getSources({ id: '3173903' });
+  if (!client) {
+    client = new WatchmodeClient({
+      apiKey: process.env.WATCHMODE_API_KEY,
+      fetch: global.fetch,
+    });
+  }
+
+  return client;
+}
+
+async function listTitles({
+  types,
+  limit = 12,
+  page = 1,
+  sortBy = "popularity_desc",
+  releaseDateStart,
+  releaseDateEnd,
+}) {
+  const watchmode = getWatchmodeClient();
+
+  const { data, error } = await watchmode.title.list({
+    types,
+    regions: DEFAULT_REGION,
+    sourceTypes: "sub,free",
+    sortBy,
+    page,
+    limit,
+    releaseDateStart,
+    releaseDateEnd,
+  });
+
+  if (error) {
+    throw new Error(error.message || "Unable to list Watchmode titles.");
+  }
+
+  return data?.titles || data || [];
+}
+
+async function getTitleDetails(titleId) {
+  const watchmode = getWatchmodeClient();
+
+  const { data, error } = await watchmode.title.getDetails(String(titleId), {
+    appendToResponse: "sources",
+    regions: DEFAULT_REGION,
+  });
+
+  if (error) {
+    throw new Error(error.message || "Unable to load Watchmode title details.");
+  }
+
+  return data;
+}
+
+async function searchTitles(query) {
+  const watchmode = getWatchmodeClient();
+  const { data, error } = await watchmode.search.byName(query);
+
+  if (error) {
+    throw new Error(error.message || "Unable to search Watchmode titles.");
+  }
+
+  return data?.title_results || [];
+}
+
+module.exports = {
+  DEFAULT_REGION,
+  getWatchmodeClient,
+  listTitles,
+  getTitleDetails,
+  searchTitles,
+};

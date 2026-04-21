@@ -8,7 +8,7 @@ export default function Explore() {
     <>
       <PageNavbar currentPath="/explore" />
       <ProviderBar />
-      <DiscoveryPage data={explorePageData} />
+      <DiscoveryPage data={explorePageData} section="explore" />
     </>
   );
 }
