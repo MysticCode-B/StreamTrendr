@@ -3,6 +3,12 @@ export const moviesPageData = {
   title: "Discover trending films, new arrivals, and worth-the-hype picks",
   description:
     "A modern movie discovery page with featured posters, genre rails, and platform-aware recommendations ready for your future API data.",
+  filters: ["Trending", "New Releases", "Top Rated", "Action", "Drama", "Sci-Fi"],
+  insights: [
+    { label: "Most Active Genre", value: "Sci-Fi" },
+    { label: "Best Platform Mix", value: "Netflix + Max" },
+    { label: "Updated Window", value: "Today" },
+  ],
   featured: {
     label: "Featured Movie",
     title: "Afterlight Signal",
@@ -40,6 +46,12 @@ export const tvShowsPageData = {
   title: "Track series momentum across binge-worthy dramas, comedies, and new episodes",
   description:
     "This page is structured like a streaming discovery hub, with a featured show, curated rails, and clear poster slots for episodic content.",
+  filters: ["Trending", "New Episodes", "Drama", "Comedy", "Sci-Fi", "Binge Worthy"],
+  insights: [
+    { label: "Fastest Climber", value: "Crime Drama" },
+    { label: "Top Momentum", value: "Hulu Originals" },
+    { label: "Watch Window", value: "This Week" },
+  ],
   featured: {
     label: "Featured Series",
     title: "Harbor State",
@@ -77,6 +89,12 @@ export const explorePageData = {
   title: "Browse what just landed, what is climbing, and what deserves a closer look",
   description:
     "This page is built as a discovery board for mixed content, combining movies and TV with a more editorial streaming feel.",
+  filters: ["Just Added", "Fresh Buzz", "Movies", "Series", "Critics Pick", "Underrated"],
+  insights: [
+    { label: "Newest Wave", value: "8 Fresh Adds" },
+    { label: "Best Discovery Mix", value: "Movies + Series" },
+    { label: "Editorial Focus", value: "Breakout Picks" },
+  ],
   featured: {
     label: "Fresh Discovery",
     title: "Current Wave",
