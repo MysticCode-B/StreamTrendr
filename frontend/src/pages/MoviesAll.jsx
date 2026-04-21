@@ -5,8 +5,9 @@ import { moviesPageData } from "../data/discoveryPages";
 
 const fallbackData = {
   eyebrow: "All Movies",
-  title: "Browse all movie results",
-  description: "A full grid of movie titles with filter chips and poster cards.",
+  title: "Browse up to 50 trending, new, and popular movies",
+  description:
+    "A full grid of movie titles blending trending, new release, and popular results.",
   filters: moviesPageData.filters,
   items: moviesPageData.shelves.flatMap((shelf) => shelf.items),
 };

@@ -18,6 +18,10 @@ export async function fetchDiscoveryPage(section) {
   return readJson(`/api/discovery/${section}`);
 }
 
-export async function fetchCatalogPage(section, limit = 32) {
+export async function fetchCatalogPage(section, limit = 50) {
   return readJson(`/api/catalog/${section}?limit=${limit}`);
+}
+
+export async function fetchSearchResults(query) {
+  return readJson(`/api/search?q=${encodeURIComponent(query)}`);
 }

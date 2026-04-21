@@ -86,6 +86,68 @@ async function buildDiscoveryResponse(section) {
   };
 }
 
+async function buildCatalogResponse(section, limit = 50) {
+  const sectionConfig = getSectionConfig(section);
+
+  if (!sectionConfig) {
+    return null;
+  }
+
+  const catalogQueries = sectionConfig.catalogQueries || [
+    { sortBy: "popularity_desc", tag: "Popular" },
+  ];
+
+  const queryLimit = Math.max(10, Math.ceil(limit / catalogQueries.length) + 10);
+  const collectedItems = [];
+  const seenIds = new Set();
+
+  for (const query of catalogQueries) {
+    const titles = await listTitles({
+      types: sectionConfig.primaryTypes,
+      limit: queryLimit,
+      sortBy: query.sortBy,
+    });
+    const hydrated = await hydrateTitles(titles, queryLimit);
+
+    for (const details of hydrated) {
+      const normalized = toDiscoveryCard(details, query.tag);
+
+      if (seenIds.has(normalized.id)) {
+        continue;
+      }
+
+      seenIds.add(normalized.id);
+      collectedItems.push(normalized);
+
+      if (collectedItems.length >= limit) {
+        break;
+      }
+    }
+
+    if (collectedItems.length >= limit) {
+      break;
+    }
+  }
+
+  return {
+    eyebrow: `All ${sectionConfig.eyebrow}`,
+    title:
+      section === "movies"
+        ? "Browse up to 50 trending, new, and popular movies"
+        : section === "tv-shows"
+          ? "Browse up to 50 trending and popular TV shows"
+          : "Browse the latest discovery results",
+    description:
+      section === "movies"
+        ? "This full movie grid blends trending momentum, new arrivals, and popular Watchmode titles into one larger browse page."
+        : section === "tv-shows"
+          ? "This full TV browse grid surfaces a larger set of Watchmode-backed shows with poster, provider, and title data."
+          : "This full discovery grid surfaces a larger set of Watchmode-backed titles.",
+    filters: sectionConfig.filters,
+    items: collectedItems,
+  };
+}
+
 function getSectionConfig(section) {
   return {
     movies: {
@@ -100,6 +162,10 @@ function getSectionConfig(section) {
         { label: "Updated Window", value: "Live" },
       ],
       primaryTypes: "movie",
+      catalogQueries: [
+        { sortBy: "popularity_desc", tag: "Trending" },
+        { sortBy: "release_date_desc", tag: "New Release" },
+      ],
       featuredLabel: "Featured Movie",
       shelves: [
         {
@@ -128,6 +194,10 @@ function getSectionConfig(section) {
         { label: "Watch Window", value: "Live" },
       ],
       primaryTypes: "tv_series",
+      catalogQueries: [
+        { sortBy: "popularity_desc", tag: "Trending" },
+        { sortBy: "release_date_desc", tag: "Fresh Episodes" },
+      ],
       featuredLabel: "Featured Series",
       shelves: [
         {
@@ -156,6 +226,10 @@ function getSectionConfig(section) {
         { label: "Editorial Focus", value: "Fresh Buzz" },
       ],
       primaryTypes: "movie,tv_series",
+      catalogQueries: [
+        { sortBy: "release_date_desc", tag: "Just Added" },
+        { sortBy: "popularity_desc", tag: "Trending" },
+      ],
       featuredLabel: "Fresh Discovery",
       shelves: [
         {
@@ -229,39 +303,17 @@ app.get("/api/discovery/:section", async (request, response) => {
 });
 
 app.get("/api/catalog/:section", async (request, response) => {
-  const sectionConfig = getSectionConfig(request.params.section);
   const limit = Number(request.query.limit) || 32;
 
-  if (!sectionConfig) {
-    response.status(404).json({ error: "Unknown catalog section." });
-    return;
-  }
-
   try {
-    const titles = await listTitles({
-      types: sectionConfig.primaryTypes,
-      limit,
-      sortBy: "popularity_desc",
-    });
-    const details = await hydrateTitles(titles, limit);
+    const payload = await buildCatalogResponse(request.params.section, limit);
 
-    response.json({
-      eyebrow: `All ${sectionConfig.eyebrow}`,
-      title:
-        request.params.section === "movies"
-          ? "Browse all movie results"
-          : request.params.section === "tv-shows"
-            ? "Browse all TV show results"
-            : "Browse all discovery results",
-      description:
-        request.params.section === "movies"
-          ? "A full movie grid powered by Watchmode poster, provider, and title data."
-          : request.params.section === "tv-shows"
-            ? "A full TV browse grid powered by Watchmode poster, provider, and title data."
-            : "A full discovery grid powered by Watchmode data.",
-      filters: sectionConfig.filters,
-      items: details.map((item) => toDiscoveryCard(item, "Live")),
-    });
+    if (!payload) {
+      response.status(404).json({ error: "Unknown catalog section." });
+      return;
+    }
+
+    response.json(payload);
   } catch (error) {
     response.status(500).json({
       error: error.message || "Unable to build catalog page data.",
