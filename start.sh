@@ -13,7 +13,7 @@ sleep 3
 
 # Start frontend
 echo "Starting frontend server..."
-cd ../frontend && npm run dev &
+cd frontend && npm run dev &
 FRONTEND_PID=$!
 
 echo ""
