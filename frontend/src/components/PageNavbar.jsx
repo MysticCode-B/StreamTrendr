@@ -8,6 +8,16 @@ const navigationLinks = [
 const accountLinks = ["Login", "Sign Up"];
 
 export const PageNavbar = ({ currentPath = "/" }) => {
+  const isActiveLink = (href) => {
+    const routePath = href.replace("#", "");
+
+    if (routePath === "/") {
+      return currentPath === "/";
+    }
+
+    return currentPath === routePath || currentPath.startsWith(`${routePath}/`);
+  };
+
   return (
     <nav className="top-navigation">
       <div className="top-navigation__brand-group">
@@ -28,9 +38,7 @@ export const PageNavbar = ({ currentPath = "/" }) => {
             key={link.label}
             href={link.href}
             className={`top-navigation__link${
-              currentPath === link.href.replace("#", "")
-                ? " top-navigation__link--active"
-                : ""
+              isActiveLink(link.href) ? " top-navigation__link--active" : ""
             }`}
           >
             {link.label}

@@ -59,6 +59,7 @@ function toDiscoveryCard(details, fallbackTag) {
     type: getDisplayType(details?.type),
     year: details?.year ? String(details.year) : "",
     userRating: details?.user_rating ?? null,
+    genreNames: details?.genre_names || [],
   };
 }
 

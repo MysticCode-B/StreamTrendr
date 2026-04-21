@@ -17,3 +17,7 @@ export async function fetchTrendingTitles(type = "all", limit = 8) {
 export async function fetchDiscoveryPage(section) {
   return readJson(`/api/discovery/${section}`);
 }
+
+export async function fetchCatalogPage(section, limit = 32) {
+  return readJson(`/api/catalog/${section}?limit=${limit}`);
+}

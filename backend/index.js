@@ -45,7 +45,49 @@ async function hydrateTitles(titleList = [], limit = 8) {
 }
 
 async function buildDiscoveryResponse(section) {
-  const sectionConfig = {
+  const sectionConfig = getSectionConfig(section);
+
+  if (!sectionConfig) {
+    return null;
+  }
+
+  const featuredList = await listTitles({
+    types: sectionConfig.primaryTypes,
+    limit: 1,
+    sortBy: "popularity_desc",
+  });
+  const [featuredDetails] = await hydrateTitles(featuredList, 1);
+
+  const shelves = await Promise.all(
+    sectionConfig.shelves.map(async (shelf) => {
+      const titles = await listTitles({
+        types: sectionConfig.primaryTypes,
+        limit: 12,
+        sortBy: shelf.sortBy,
+      });
+      const hydrated = await hydrateTitles(titles, 12);
+
+      return {
+        title: shelf.title,
+        description: shelf.description,
+        items: hydrated.map((details) => toDiscoveryCard(details, shelf.tag)),
+      };
+    }),
+  );
+
+  return {
+    eyebrow: sectionConfig.eyebrow,
+    title: sectionConfig.title,
+    description: sectionConfig.description,
+    filters: sectionConfig.filters,
+    insights: sectionConfig.insights,
+    featured: toFeaturedCard(featuredDetails || {}, sectionConfig.featuredLabel),
+    shelves,
+  };
+}
+
+function getSectionConfig(section) {
+  return {
     movies: {
       eyebrow: "Movies",
       title: "Discover trending films, new arrivals, and worth-the-hype picks",
@@ -131,44 +173,6 @@ async function buildDiscoveryResponse(section) {
       ],
     },
   }[section];
-
-  if (!sectionConfig) {
-    return null;
-  }
-
-  const featuredList = await listTitles({
-    types: sectionConfig.primaryTypes,
-    limit: 1,
-    sortBy: "popularity_desc",
-  });
-  const [featuredDetails] = await hydrateTitles(featuredList, 1);
-
-  const shelves = await Promise.all(
-    sectionConfig.shelves.map(async (shelf) => {
-      const titles = await listTitles({
-        types: sectionConfig.primaryTypes,
-        limit: 4,
-        sortBy: shelf.sortBy,
-      });
-      const hydrated = await hydrateTitles(titles, 4);
-
-      return {
-        title: shelf.title,
-        description: shelf.description,
-        items: hydrated.map((details) => toDiscoveryCard(details, shelf.tag)),
-      };
-    }),
-  );
-
-  return {
-    eyebrow: sectionConfig.eyebrow,
-    title: sectionConfig.title,
-    description: sectionConfig.description,
-    filters: sectionConfig.filters,
-    insights: sectionConfig.insights,
-    featured: toFeaturedCard(featuredDetails || {}, sectionConfig.featuredLabel),
-    shelves,
-  };
 }
 
 app.get("/api/health", (request, response) => {
@@ -220,6 +224,47 @@ app.get("/api/discovery/:section", async (request, response) => {
   } catch (error) {
     response.status(500).json({
       error: error.message || "Unable to build discovery page data.",
+    });
+  }
+});
+
+app.get("/api/catalog/:section", async (request, response) => {
+  const sectionConfig = getSectionConfig(request.params.section);
+  const limit = Number(request.query.limit) || 32;
+
+  if (!sectionConfig) {
+    response.status(404).json({ error: "Unknown catalog section." });
+    return;
+  }
+
+  try {
+    const titles = await listTitles({
+      types: sectionConfig.primaryTypes,
+      limit,
+      sortBy: "popularity_desc",
+    });
+    const details = await hydrateTitles(titles, limit);
+
+    response.json({
+      eyebrow: `All ${sectionConfig.eyebrow}`,
+      title:
+        request.params.section === "movies"
+          ? "Browse all movie results"
+          : request.params.section === "tv-shows"
+            ? "Browse all TV show results"
+            : "Browse all discovery results",
+      description:
+        request.params.section === "movies"
+          ? "A full movie grid powered by Watchmode poster, provider, and title data."
+          : request.params.section === "tv-shows"
+            ? "A full TV browse grid powered by Watchmode poster, provider, and title data."
+            : "A full discovery grid powered by Watchmode data.",
+      filters: sectionConfig.filters,
+      items: details.map((item) => toDiscoveryCard(item, "Live")),
+    });
+  } catch (error) {
+    response.status(500).json({
+      error: error.message || "Unable to build catalog page data.",
     });
   }
 });

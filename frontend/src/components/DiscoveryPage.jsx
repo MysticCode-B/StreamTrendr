@@ -1,8 +1,67 @@
 import { useEffect, useState } from "react";
 import { fetchDiscoveryPage } from "../lib/api";
 
+const DEFAULT_VISIBLE_ITEMS = 4;
+
+function matchesFilter(item, filterLabel) {
+  if (filterLabel === "All") {
+    return true;
+  }
+
+  const normalizedFilter = filterLabel.toLowerCase();
+  const normalizedTitle = item.title?.toLowerCase() || "";
+  const normalizedProvider = item.provider?.toLowerCase() || "";
+  const normalizedTag = item.tag?.toLowerCase() || "";
+  const normalizedType = item.type?.toLowerCase() || "";
+  const normalizedGenres = Array.isArray(item.genreNames)
+    ? item.genreNames.map((genre) => genre.toLowerCase())
+    : [];
+
+  if (
+    normalizedTitle.includes(normalizedFilter) ||
+    normalizedProvider.includes(normalizedFilter) ||
+    normalizedTag.includes(normalizedFilter) ||
+    normalizedType.includes(normalizedFilter) ||
+    normalizedGenres.some((genre) => genre.includes(normalizedFilter))
+  ) {
+    return true;
+  }
+
+  if (normalizedFilter === "top rated" || normalizedFilter === "critics pick") {
+    return Number(item.userRating) >= 7;
+  }
+
+  if (normalizedFilter === "movies") {
+    return normalizedType.includes("movie");
+  }
+
+  if (normalizedFilter === "series" || normalizedFilter === "tv shows") {
+    return normalizedType.includes("tv");
+  }
+
+  if (
+    normalizedFilter === "new releases" ||
+    normalizedFilter === "new episodes" ||
+    normalizedFilter === "just added" ||
+    normalizedFilter === "fresh buzz"
+  ) {
+    return (
+      normalizedTag.includes("fresh") ||
+      normalizedTag.includes("new") ||
+      normalizedTag.includes("added")
+    );
+  }
+
+  if (normalizedFilter === "binge worthy") {
+    return normalizedTag.includes("binge");
+  }
+
+  return false;
+}
+
 export const DiscoveryPage = ({ data, section }) => {
   const [pageData, setPageData] = useState(data);
+  const [activeFilter, setActiveFilter] = useState("All");
 
   useEffect(() => {
     let isActive = true;
@@ -24,6 +83,19 @@ export const DiscoveryPage = ({ data, section }) => {
     };
   }, [section]);
 
+  useEffect(() => {
+    setPageData(data);
+    setActiveFilter("All");
+  }, [data, section]);
+
+  const availableFilters = ["All", ...pageData.filters];
+  const viewAllHref =
+    section === "movies"
+      ? "#/movies/all"
+      : section === "tv-shows"
+        ? "#/tv-shows/all"
+        : "#/explore";
+
   return (
     <section className="discovery-page">
       <header className="discovery-hero">
@@ -33,11 +105,14 @@ export const DiscoveryPage = ({ data, section }) => {
           <p className="discovery-hero__description">{pageData.description}</p>
 
           <div className="discovery-filter-bar" aria-label="Browse filters">
-            {pageData.filters.map((filter) => (
+            {availableFilters.map((filter) => (
               <button
                 key={filter}
                 type="button"
-                className="discovery-filter-chip"
+                className={`discovery-filter-chip${
+                  activeFilter === filter ? " discovery-filter-chip--active" : ""
+                }`}
+                onClick={() => setActiveFilter(filter)}
               >
                 {filter}
               </button>
@@ -88,50 +163,72 @@ export const DiscoveryPage = ({ data, section }) => {
       </header>
 
       <div className="discovery-shelves">
-        {pageData.shelves.map((shelf) => (
-          <section key={shelf.title} className="discovery-shelf">
-            <div className="discovery-shelf__heading">
-              <div>
-                <h3 className="discovery-shelf__title">{shelf.title}</h3>
-                <p className="discovery-shelf__description">
-                  {shelf.description}
-                </p>
+        {pageData.shelves.map((shelf) => {
+          const filteredItems = shelf.items.filter((item) =>
+            matchesFilter(item, activeFilter),
+          );
+          const visibleItems = filteredItems.slice(0, DEFAULT_VISIBLE_ITEMS);
+
+          return (
+            <section key={shelf.title} className="discovery-shelf">
+              <div className="discovery-shelf__heading">
+                <div>
+                  <h3 className="discovery-shelf__title">{shelf.title}</h3>
+                  <p className="discovery-shelf__description">
+                    {shelf.description}
+                  </p>
+                </div>
+
+                <div className="discovery-shelf__actions">
+                  <p className="discovery-shelf__count">
+                    Showing {visibleItems.length} of {filteredItems.length}
+                  </p>
+
+                  <a href={viewAllHref} className="discovery-shelf__action">
+                    View All
+                  </a>
+                </div>
               </div>
-              <button type="button" className="discovery-shelf__action">
-                View All
-              </button>
-            </div>
 
-            <div className="discovery-shelf__grid">
-              {shelf.items.map((item) => (
-                <article key={item.id} className="discovery-card">
-                  <div className="discovery-card__poster">
-                    {item.poster ? (
-                      <img
-                        src={item.poster}
-                        alt={`${item.title} poster`}
-                        className="discovery-card__image"
-                      />
-                    ) : null}
+              {filteredItems.length === 0 ? (
+                <div className="discovery-shelf__empty-state">
+                  No titles match the current filter yet.
+                </div>
+              ) : (
+                <div className="discovery-shelf__grid">
+                  {visibleItems.map((item) => (
+                    <article key={item.id} className="discovery-card">
+                      <div className="discovery-card__poster">
+                        {item.poster ? (
+                          <img
+                            src={item.poster}
+                            alt={`${item.title} poster`}
+                            className="discovery-card__image"
+                          />
+                        ) : null}
 
-                    <span className="discovery-card__badge">{item.tag}</span>
-                    <span className="discovery-card__poster-text">
-                      {item.poster ? item.title : "Poster Slot"}
-                    </span>
-                  </div>
+                        <span className="discovery-card__badge">{item.tag}</span>
+                        <span className="discovery-card__poster-text">
+                          {item.poster ? item.title : "Poster Slot"}
+                        </span>
+                      </div>
 
-                  <div className="discovery-card__body">
-                    <div className="discovery-card__meta">
-                      <p className="discovery-card__provider">{item.provider}</p>
-                      <span className="discovery-card__status-pill">{item.tag}</span>
-                    </div>
-                    <h4 className="discovery-card__title">{item.title}</h4>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-        ))}
+                      <div className="discovery-card__body">
+                        <div className="discovery-card__meta">
+                          <p className="discovery-card__provider">{item.provider}</p>
+                          <span className="discovery-card__status-pill">
+                            {item.tag}
+                          </span>
+                        </div>
+                        <h4 className="discovery-card__title">{item.title}</h4>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </section>
+          );
+        })}
       </div>
     </section>
   );
