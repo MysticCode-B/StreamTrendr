@@ -10,7 +10,7 @@ async function readJson(path) {
   return response.json();
 }
 
-export async function fetchTrendingTitles(type = "all", limit = 8) {
+export async function fetchTrendingTitles(type = "all", limit = 10) {
   return readJson(`/api/trending?type=${type}&limit=${limit}`);
 }
 
