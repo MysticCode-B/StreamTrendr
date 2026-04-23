@@ -18,7 +18,7 @@ export async function fetchDiscoveryPage(section) {
   return readJson(`/api/discovery/${section}`);
 }
 
-export async function fetchCatalogPage(section, limit = 50) {
+export async function fetchCatalogPage(section, limit = 250) {
   return readJson(`/api/catalog/${section}?limit=${limit}`);
 }
 

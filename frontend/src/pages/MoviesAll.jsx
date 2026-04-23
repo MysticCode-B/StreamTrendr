@@ -5,7 +5,7 @@ import { moviesPageData } from "../data/discoveryPages";
 
 const fallbackData = {
   eyebrow: "All Movies",
-  title: "Browse up to 50 trending, new, and popular movies",
+  title: "Browse up to 250 trending, new, and popular movies",
   description:
     "A full grid of movie titles blending trending, new release, and popular results.",
   filters: moviesPageData.filters,
