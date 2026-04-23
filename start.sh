@@ -1,20 +1,34 @@
 #!/bin/bash
 
-# Start both backend and frontend servers
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 echo "Starting StreamTrendr..."
 
-# Start backend in background
 echo "Starting backend server..."
-cd backend && npm run dev &
+(
+  cd "$ROOT_DIR/backend"
+  npm run dev
+) &
 BACKEND_PID=$!
 
-# Wait a moment for backend to start
 sleep 3
 
-# Start frontend
 echo "Starting frontend server..."
-cd frontend && npm run dev &
+(
+  cd "$ROOT_DIR/frontend"
+  npm run dev
+) &
 FRONTEND_PID=$!
+
+cleanup() {
+  echo ""
+  echo "Stopping servers..."
+  kill "$BACKEND_PID" "$FRONTEND_PID" 2>/dev/null || true
+}
+
+trap cleanup INT TERM EXIT
 
 echo ""
 echo "Both servers are starting up!"
@@ -23,6 +37,4 @@ echo "Frontend App: http://localhost:5173 or http://localhost:5174"
 echo ""
 echo "Press Ctrl+C to stop both servers"
 
-# Wait for user to stop
-trap "echo 'Stopping servers...'; kill $BACKEND_PID $FRONTEND_PID; exit" INT
-wait
+wait "$BACKEND_PID" "$FRONTEND_PID"
