@@ -3,33 +3,39 @@ import { useEffect, useState } from "react";
 const VISIBLE_CARDS = 4;
 
 export const TrendingCarousel = ({ items }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activePage, setActivePage] = useState(0);
+  const totalPages = Math.max(1, Math.ceil(items.length / VISIBLE_CARDS));
 
   useEffect(() => {
-    if (items.length <= 1) {
+    if (totalPages <= 1) {
       return undefined;
     }
 
     const intervalId = window.setInterval(() => {
-      setActiveIndex((currentIndex) => (currentIndex + 1) % items.length);
+      setActivePage((currentPage) => (currentPage + 1) % totalPages);
     }, 4500);
 
     return () => window.clearInterval(intervalId);
-  }, [items]);
+  }, [totalPages]);
+
+  useEffect(() => {
+    if (activePage >= totalPages) {
+      setActivePage(0);
+    }
+  }, [activePage, totalPages]);
 
   const goToPrevious = () => {
-    setActiveIndex((currentIndex) =>
-      currentIndex === 0 ? items.length - 1 : currentIndex - 1,
+    setActivePage((currentPage) =>
+      currentPage === 0 ? totalPages - 1 : currentPage - 1,
     );
   };
 
   const goToNext = () => {
-    setActiveIndex((currentIndex) => (currentIndex + 1) % items.length);
+    setActivePage((currentPage) => (currentPage + 1) % totalPages);
   };
 
-  const visibleItems = Array.from({ length: Math.min(VISIBLE_CARDS, items.length) }, (_, offset) => {
-    return items[(activeIndex + offset) % items.length];
-  });
+  const pageStartIndex = activePage * VISIBLE_CARDS;
+  const visibleItems = items.slice(pageStartIndex, pageStartIndex + VISIBLE_CARDS);
 
   return (
     <div className="trending-carousel">
@@ -73,13 +79,6 @@ export const TrendingCarousel = ({ items }) => {
                   className="trend-card__poster-image"
                 />
               ) : null}
-
-              <div className="trend-card__poster-overlay">
-                <span className="trend-card__poster-badge">{item.type}</span>
-                <p className="trend-card__poster-label">
-                  {item.poster ? item.title : item.posterLabel}
-                </p>
-              </div>
             </div>
 
             <div className="trend-card__body">
@@ -101,13 +100,13 @@ export const TrendingCarousel = ({ items }) => {
         </p>
 
         <div className="trending-carousel__pagination" aria-label="Carousel position">
-          {items.map((item, index) => (
+          {Array.from({ length: totalPages }, (_, index) => (
             <button
-              key={item.id}
+              key={`page-${index}`}
               type="button"
-              className={`trending-carousel__dot${index === activeIndex ? " trending-carousel__dot--active" : ""}`}
-              onClick={() => setActiveIndex(index)}
-              aria-label={`Go to ${item.title}`}
+              className={`trending-carousel__dot${index === activePage ? " trending-carousel__dot--active" : ""}`}
+              onClick={() => setActivePage(index)}
+              aria-label={`Go to carousel page ${index + 1}`}
             />
           ))}
         </div>
